@@ -1,0 +1,78 @@
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.step-indicator__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.step-indicator__circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 600;
+  border: 1.5px solid var(--color-border-strong);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  transition: background var(--transition-fast), border-color var(--transition-fast),
+    color var(--transition-fast);
+}
+
+.step-indicator__circle svg {
+  width: 14px;
+  height: 14px;
+}
+
+.step-indicator__label {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  transition: color var(--transition-fast);
+}
+
+.step-indicator__item--active .step-indicator__circle {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.step-indicator__item--active .step-indicator__label {
+  color: var(--color-primary);
+}
+
+.step-indicator__item--completed .step-indicator__circle {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+
+.step-indicator__item--completed .step-indicator__label {
+  color: var(--color-text-secondary);
+}
+
+@media (max-width: 640px) {
+  .step-indicator {
+    gap: 16px;
+  }
+
+  .step-indicator__label {
+    display: none;
+  }
+
+  .step-indicator__item--active .step-indicator__label {
+    display: inline;
+  }
+}
