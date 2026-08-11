@@ -1,20 +1,16 @@
+import { Outlet } from "react-router-dom";
 import Sidebar from "../components/layout/Sidebar";
-import Navbar from "../components/layout/Navbar";
+import "../styles/components/AdminLayout.css";
 
 function AdminLayout({ children }) {
-    return (
-        <div style={{ display: "flex" }}>
-            <Sidebar />
-
-            <div style={{ flex: 1 }}>
-                <Navbar />
-
-                <main style={{ padding: "20px" }}>
-                    {children}
-                </main>
-            </div>
-        </div>
-    );
+  return (
+    <div className="admin-layout">
+      <Sidebar />
+      <main className="admin-layout__content">
+        {children || <Outlet />}
+      </main>
+    </div>
+  );
 }
 
 export default AdminLayout;
