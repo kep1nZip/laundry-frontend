@@ -1,0 +1,128 @@
+.file-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 180px;
+  padding: 24px;
+  border: 1.5px dashed var(--color-border-strong);
+  border-radius: var(--radius-md);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: center;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.file-dropzone:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.file-dropzone--dragging {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.file-dropzone--error {
+  border-color: var(--color-danger);
+}
+
+.file-dropzone__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.file-dropzone__icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft-strong);
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.file-dropzone__icon svg,
+.file-dropzone__file-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.file-dropzone__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+
+.file-dropzone__hint {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--color-text-muted);
+}
+
+.file-dropzone__selected {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  max-width: 320px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  background: var(--color-input-bg);
+}
+
+.file-dropzone__file-icon {
+  display: flex;
+  color: var(--color-primary);
+  flex: none;
+}
+
+.file-dropzone__filename {
+  flex: 1;
+  min-width: 0;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+}
+
+.file-dropzone__remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  flex: none;
+  border: none;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--color-text-muted);
+  cursor: pointer;
+}
+
+.file-dropzone__remove:hover {
+  background: var(--color-border);
+  color: var(--color-text-primary);
+}
+
+.file-dropzone__remove svg {
+  width: 12px;
+  height: 12px;
+}
+
+.file-dropzone__error-text {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--color-danger);
+}
