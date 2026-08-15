@@ -21,15 +21,17 @@ export default function Register() {
     console.log(form);
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4">
-      <div className="grid md:grid-cols-2 gap-12 max-w-5xl w-full items-center">
+ return (
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center bg-[#fcfcfc] px-4">
+      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] rounded-full bg-blue-200 opacity-50 blur-[100px] pointer-events-none z-0" />
+      <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] rounded-full bg-blue-200 opacity-50 blur-[100px] pointer-events-none z-0" />
+      <div className="grid md:grid-cols-2 gap-12 max-w-5xl w-full items-center relative z-10">
         <div className="hidden md:block">
           <h1 className="text-4xl font-bold text-gray-900 leading-tight">
-            Kelola Laundry lebih <br /> mudah dengan{" "}
-            <span className="text-blue-600">LaundryIn</span>
+            Kelola Loundry lebih <br /> mudah dengan{" "}
+            <span className="text-blue-600">LoundryIn</span>
           </h1>
-          <p className="mt-4 text-gray-500">
+          <p className="mt-2 text-[16px] font-medium text-[#1e1e1e]">
             Buat akun untuk memulai mengelola pesanan, status cucian, dan
             pelanggan dalam satu dashboard.
           </p>
@@ -41,11 +43,11 @@ export default function Register() {
           />
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-8 w-full max-w-md mx-auto">
+        <div className="bg-white border border-[#ededed] rounded-lg p-8 w-full max-w-md mx-auto">
           <h2 className="text-xl font-bold text-center mb-4">
             Daftar Sekarang
           </h2>
-          <hr className="border-gray-200 mb-6" />
+          <hr className="border-[#e6e8ea] mb-6" />
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
