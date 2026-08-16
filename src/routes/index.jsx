@@ -8,6 +8,7 @@ import Dashboard from "../pages/dashboard/Dashboard";
 import Orders from "../pages/orders/Orders";
 import CreateOrder from "../pages/orders/CreateOrder";
 import Services from "../pages/services/Services";
+import Chat from "../pages/chat/Chat";
 import Profile from "../pages/profile/Profile";
 
 function AppRoutes() {
@@ -25,6 +26,8 @@ function AppRoutes() {
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/orders/create" element={<CreateOrder />} />
                 <Route path="/services" element={<Services />} />
+                <Route path="/chat" element={<Chat />} />
+                <Route path="/messages" element={<Chat />} />
                 <Route path="/profile" element={<Profile />} />
             </Route>
         </Routes>

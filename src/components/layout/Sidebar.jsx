@@ -103,6 +103,29 @@ function Sidebar() {
               />
             </svg>
           </NavLink>
+
+          {/* 4. Chat / Messages */}
+          <NavLink
+            to="/chat"
+            className={({ isActive }) =>
+              `admin-sidebar__link ${isActive ? "admin-sidebar__link--active" : ""}`
+            }
+            title="Pesan & Masukan"
+          >
+            <svg
+              width="30"
+              height="30"
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              className="admin-sidebar__icon"
+            >
+              <path
+                d="M3 3H27V21H4.755L3 22.755V3ZM3 0C1.35 0 0.015 1.35 0.015 3L0 30L6 24H27C28.65 24 30 22.65 30 21V3C30 1.35 28.65 0 27 0H3ZM6 15H18V18H6V15ZM6 10.5H24V13.5H6V10.5ZM6 6H24V9H6V6Z"
+                fill="currentColor"
+              />
+            </svg>
+          </NavLink>
         </div>
 
         {/* Bottom Actions & User Profile */}
