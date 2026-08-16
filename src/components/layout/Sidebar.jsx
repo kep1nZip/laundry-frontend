@@ -1,8 +1,11 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import Logo from "../ui/Logo";
 import "../../styles/components/Sidebar.css";
 
 function Sidebar() {
+  const location = useLocation();
+  const isOrdersActive = location.pathname.startsWith("/orders");
+
   return (
     <aside className="admin-sidebar">
       {/* Brand / Logo Section matching Figma */}
@@ -37,12 +40,10 @@ function Sidebar() {
             </svg>
           </NavLink>
 
-          {/* 2. Orders */}
+          {/* 2. Orders (Active on /orders and /orders/create) */}
           <NavLink
             to="/orders"
-            className={({ isActive }) =>
-              `admin-sidebar__link ${isActive ? "admin-sidebar__link--active" : ""}`
-            }
+            className={`admin-sidebar__link ${isOrdersActive ? "admin-sidebar__link--active" : ""}`}
             title="Pesanan"
           >
             <svg
@@ -151,5 +152,5 @@ function Sidebar() {
     </aside>
   );
 }
- 
+
 export default Sidebar;

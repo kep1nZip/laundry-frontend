@@ -1,301 +1,389 @@
 import { useState } from "react";
-import { Plus, Trash2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import {
+  Search,
+  Calendar,
+  ChevronDown,
+  Download,
+  MoreHorizontal,
+  ChevronLeft,
+  ChevronRight,
+  Plus,
+  Eye,
+  Printer,
+  Trash2,
+} from "lucide-react";
+import "../../styles/pages/Orders.css";
 
-const SERVICE_OPTIONS = [
-  { value: "cuci_kering", label: "Cuci Kering", pricePerKg: 7000 },
-  { value: "cuci_setrika", label: "Cuci + Setrika", pricePerKg: 10000 },
-  { value: "setrika_saja", label: "Setrika Saja", pricePerKg: 5000 },
-  { value: "cuci_sepatu", label: "Cuci Sepatu", pricePerKg: 15000 },
-  { value: "cuci_bed_cover", label: "Cuci Bed Cover", pricePerKg: 12000 },
-  { value: "cuci_karpet", label: "Cuci Karpet", pricePerKg: 12000 },
-  { value: "cuci_tas", label: "Cuci Tas", pricePerKg: 15000 },
+const INITIAL_ORDERS = [
+  {
+    id: "ORD-01",
+    customer: "Ahmad Tahalu",
+    service: "Cuci Kering",
+    amount: "Rp7.000",
+    numericAmount: 7000,
+    status: "Diproses",
+    date: "2026-08-10",
+  },
+  {
+    id: "ORD-02",
+    customer: "Ahmad Tahalu",
+    service: "Cuci Kering",
+    amount: "Rp10.000",
+    numericAmount: 10000,
+    status: "Selesai",
+    date: "2026-08-11",
+  },
+  {
+    id: "ORD-03",
+    customer: "Ahmad Tahalu",
+    service: "Cuci Kering",
+    amount: "Rp15.000",
+    numericAmount: 15000,
+    status: "Diproses",
+    date: "2026-08-12",
+  },
+  {
+    id: "ORD-04",
+    customer: "Ahmad Tahalu",
+    service: "Cuci Kering",
+    amount: "Rp25.000",
+    numericAmount: 25000,
+    status: "Selesai",
+    date: "2026-08-14",
+  },
+  {
+    id: "ORD-05",
+    customer: "Ahmad Tahalu",
+    service: "Cuci Kering",
+    amount: "Rp30.000",
+    numericAmount: 30000,
+    status: "Selesai",
+    date: "2026-08-15",
+  },
 ];
 
-const formatRupiah = (num) =>
-  `Rp${num.toLocaleString("id-ID", { maximumFractionDigits: 0 })}`;
+const SERVICE_OPTIONS = [
+  "Semua Layanan",
+  "Cuci Kering",
+  "Cuci + Setrika",
+  "Setrika Saja",
+  "Cuci Sepatu",
+  "Cuci Bed Cover",
+];
+
+const STATUS_OPTIONS = [
+  "Semua Status",
+  "Diproses",
+  "Selesai",
+  "Menunggu",
+  "Batal",
+];
 
 function Orders() {
-  const [customer, setCustomer] = useState({
-    nama: "",
-    noHp: "",
-    alamat: "",
+  const [orders, setOrders] = useState(INITIAL_ORDERS);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedService, setSelectedService] = useState("Semua Layanan");
+  const [selectedStatus, setSelectedStatus] = useState("Semua Status");
+  const [activeActionMenu, setActiveActionMenu] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Filter orders
+  const filteredOrders = orders.filter((order) => {
+    const matchesSearch =
+      order.customer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      order.id.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesService =
+      selectedService === "Semua Layanan" || order.service === selectedService;
+    const matchesStatus =
+      selectedStatus === "Semua Status" || order.status === selectedStatus;
+    return matchesSearch && matchesService && matchesStatus;
   });
 
-  const [services, setServices] = useState([
-    { id: crypto.randomUUID(), jenisLayanan: "", berat: "", catatan: "" },
-  ]);
-
-  const handleCustomerChange = (e) => {
-    setCustomer({ ...customer, [e.target.name]: e.target.value });
-  };
-
-  const handleServiceChange = (id, field, value) => {
-    setServices((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, [field]: value } : s))
+  // Handle inline status change
+  const handleStatusChange = (orderId, newStatus) => {
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o))
     );
   };
 
-  const addService = () => {
-    setServices((prev) => [
-      ...prev,
-      { id: crypto.randomUUID(), jenisLayanan: "", berat: "", catatan: "" },
+  // Handle delete order
+  const handleDeleteOrder = (orderId) => {
+    setOrders((prev) => prev.filter((o) => o.id !== orderId));
+    setActiveActionMenu(null);
+  };
+
+  // Handle export CSV
+  const handleExportCSV = () => {
+    const headers = ["ID Pesanan", "Pelanggan", "Layanan", "Jumlah", "Status", "Tanggal"];
+    const rows = filteredOrders.map((o) => [
+      o.id,
+      o.customer,
+      o.service,
+      o.amount,
+      o.status,
+      o.date,
     ]);
-  };
-
-  const removeService = (id) => {
-    setServices((prev) => prev.filter((s) => s.id !== id));
-  };
-
-  const getServiceInfo = (jenisLayanan) =>
-    SERVICE_OPTIONS.find((opt) => opt.value === jenisLayanan);
-
-  const getSubtotal = (service) => {
-    const info = getServiceInfo(service.jenisLayanan);
-    const berat = parseFloat(service.berat) || 0;
-    return info ? info.pricePerKg * berat : 0;
-  };
-
-  const total = services.reduce((sum, s) => sum + getSubtotal(s), 0);
-
-  const handleSubmit = () => {
-    const payload = { customer, services, total };
-    console.log(payload);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", `daftar_pesanan_${new Date().toISOString().slice(0, 10)}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
-    <div className="p-10">
-      <div className="flex items-center justify-between mb-10">
-        <div>
-          <h1 className="text-[30px] font-semibold text-black">
-            Input Pesanan
-          </h1>
-          <p className="text-sm text-[#8e8e8e]">
-            Memasukkan Data Pesanan Offline
-          </p>
-        </div>
-        <button className="border border-[#267dff] text-[#267dff] rounded-2xl h-[52px] px-4 flex items-center gap-2 font-medium text-sm">
-          <Plus className="w-5 h-5" />
-          Pengguna Baru
-        </button>
+    <div className="orders-page">
+      {/* Header */}
+      <div className="orders-page__header">
+        <h1 className="orders-page__title">Daftar Pesanan</h1>
+        <p className="orders-page__subtitle">
+          Mengelola dan melihat daftar pesanan
+        </p>
       </div>
 
-      <div className="grid grid-cols-[760px_1fr] gap-6 items-start">
-        <div className="flex flex-col gap-6">
-          <div className="border border-[#e1e1e1] rounded-2xl p-6">
-            <h2 className="text-[20px] font-medium text-[#191c1e] mb-6">
-              Informasi Pelanggan
-            </h2>
-            <div className="flex gap-6 mb-6">
-              <div className="flex-1 flex flex-col gap-2">
-                <label className="text-[16px] font-medium text-[#3e484f]">
-                  Nama Pelanggan
-                </label>
-                <input
-                  type="text"
-                  name="nama"
-                  value={customer.nama}
-                  onChange={handleCustomerChange}
-                  placeholder="Masukkan Nama Pelanggan"
-                  className="bg-[#f6f6f6] rounded-lg p-4 text-[16px] outline-none w-full"
-                />
-              </div>
-              <div className="w-[301px] flex flex-col gap-2">
-                <label className="text-[16px] font-medium text-[#3e484f]">
-                  No HP
-                </label>
-                <input
-                  type="tel"
-                  name="noHp"
-                  value={customer.noHp}
-                  onChange={handleCustomerChange}
-                  placeholder="087654321"
-                  className="bg-[#f6f6f6] rounded-lg p-4 text-[16px] outline-none w-full"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col gap-2">
-              <label className="text-[16px] font-medium text-[#3e484f]">
-                Alamat <span className="text-[#8e8e8e] text-xs">(opsional)</span>
-              </label>
-              <textarea
-                name="alamat"
-                value={customer.alamat}
-                onChange={handleCustomerChange}
-                placeholder="Masukkan Alamat Pelanggan"
-                className="bg-[#f6f6f6] rounded-lg p-4 text-[16px] outline-none w-full h-[98px] resize-none"
-              />
-            </div>
+      {/* Main Table Card */}
+      <div className="orders-table-card">
+        {/* Filter Controls Bar */}
+        <div className="orders-filters-bar">
+          {/* 1. Search */}
+          <div className="orders-search-box">
+            <Search className="orders-search-box__icon w-5 h-5" />
+            <input
+              type="text"
+              placeholder="Cari Nama Pelanggan..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="orders-search-box__input"
+            />
           </div>
 
-          <div className="border border-[#e1e1e1] rounded-2xl p-6">
-            <h2 className="text-[20px] font-medium text-[#191c1e] mb-6">
-              Detail Layanan
-            </h2>
+          {/* 2. Date Range Filter */}
+          <div className="orders-filter-btn" title="Rentang Tanggal">
+            <span>10/08/2026 - 1/09/2026</span>
+            <Calendar className="w-5 h-5 text-[#4B4B4B]" />
+          </div>
 
-            <div className="flex flex-col gap-6">
-              {services.map((service, index) => (
-                <div
-                  key={service.id}
-                  className="border-b border-[#e1e1e1] pb-6 flex flex-col gap-4"
-                >
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-[18px] font-medium text-[#191c1e]">
-                      Layanan {index + 1}
-                    </h3>
-                    {index > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => removeService(service.id)}
-                        className="bg-[#ffecec] border border-[#ef4444] rounded-lg w-10 h-10 flex items-center justify-center"
-                      >
-                        <Trash2 className="w-5 h-5 text-[#ef4444]" />
-                      </button>
-                    )}
-                  </div>
-
-                  <div className="flex gap-6">
-                    <div className="flex-1 flex flex-col gap-2">
-                      <label className="text-[16px] font-medium text-[#3e484f]">
-                        Jenis Layanan
-                      </label>
-                      <select
-                        value={service.jenisLayanan}
-                        onChange={(e) =>
-                          handleServiceChange(
-                            service.id,
-                            "jenisLayanan",
-                            e.target.value
-                          )
-                        }
-                        className="bg-[#f6f6f6] rounded-lg p-4 text-[16px] outline-none w-full"
-                      >
-                        <option value="">Pilih Jenis Layanan</option>
-                        {SERVICE_OPTIONS.map((opt) => (
-                          <option key={opt.value} value={opt.value}>
-                            {opt.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    <div className="w-[301px] flex flex-col gap-2">
-                      <label className="text-[16px] font-medium text-[#3e484f]">
-                        Berat (kg)
-                      </label>
-                      <input
-                        type="number"
-                        min="0"
-                        value={service.berat}
-                        onChange={(e) =>
-                          handleServiceChange(service.id, "berat", e.target.value)
-                        }
-                        placeholder="0"
-                        className="bg-[#f6f6f6] rounded-lg p-4 text-[16px] outline-none w-full"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    <label className="text-[16px] font-medium text-[#3e484f]">
-                      Catatan{" "}
-                      <span className="text-[#8e8e8e] text-xs">(Opsional)</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={service.catatan}
-                      onChange={(e) =>
-                        handleServiceChange(service.id, "catatan", e.target.value)
-                      }
-                      placeholder="-"
-                      className="bg-[#f6f6f6] rounded-lg p-4 text-[16px] outline-none w-full"
-                    />
-                  </div>
-                </div>
+          {/* 3. Service Filter Dropdown */}
+          <div className="orders-filter-btn">
+            <span>{selectedService}</span>
+            <ChevronDown className="w-4 h-4 text-[#4B4B4B]" />
+            <select
+              value={selectedService}
+              onChange={(e) => setSelectedService(e.target.value)}
+              className="orders-filter-btn__select"
+            >
+              {SERVICE_OPTIONS.map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
               ))}
-            </div>
-
-            <button
-              type="button"
-              onClick={addService}
-              className="w-full flex items-center justify-center gap-2 text-[#267dff] font-bold text-[16px] mt-6"
-            >
-              Tambah Layanan Lain
-              <Plus className="w-5 h-5" />
-            </button>
+            </select>
           </div>
+
+          {/* 4. Status Filter Dropdown */}
+          <div className="orders-filter-btn">
+            <span>{selectedStatus}</span>
+            <ChevronDown className="w-4 h-4 text-[#4B4B4B]" />
+            <select
+              value={selectedStatus}
+              onChange={(e) => setSelectedStatus(e.target.value)}
+              className="orders-filter-btn__select"
+            >
+              {STATUS_OPTIONS.map((st) => (
+                <option key={st} value={st}>
+                  {st}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* 5. Export Button */}
+          <button
+            type="button"
+            onClick={handleExportCSV}
+            className="orders-export-btn"
+            title="Download CSV"
+          >
+            <Download className="w-4 h-4" />
+            <span>Export</span>
+          </button>
         </div>
 
-        <div>
-          <div className="border border-[#e1e1e1] rounded-2xl p-6">
-            <h2 className="text-[20px] font-medium text-[#191c1e] mb-6">
-              Ringkasan Pembayaran
-            </h2>
-
-            <div className="border-b border-[#e1e1e1] pb-6 mb-6">
-              <div className="bg-[#edf6ff] border border-[#4fa3ff] rounded-xl p-6">
-                <p className="font-semibold text-[16px] text-[#1e1e1e]">
-                  {customer.nama || "Nama Pelanggan"}
-                </p>
-                <p className="text-sm text-[#4b4b4b] mt-1">
-                  {customer.noHp || "No HP"}
-                </p>
-                <p className="text-xs text-[#4b4b4b] mt-2">
-                  {customer.alamat || "Alamat belum diisi"}
-                </p>
-              </div>
-            </div>
-
-            <div className="border-b border-[#e1e1e1] pb-6 mb-6 flex flex-col gap-4">
-              <h3 className="text-[18px] font-medium text-[#191c1e]">
-                Daftar Layanan Pesanan
-              </h3>
-
-              {services.every((s) => !s.jenisLayanan) ? (
-                <p className="text-sm text-[#8e8e8e]">Belum ada layanan diisi</p>
+        {/* Table Content */}
+        <div className="orders-table-container">
+          <table className="orders-table">
+            <thead>
+              <tr>
+                <th>Daftar Pesanan</th>
+                <th>Pelanggan</th>
+                <th>Layanan</th>
+                <th>Jumlah</th>
+                <th>Status</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredOrders.length === 0 ? (
+                <tr>
+                  <td colSpan="6" style={{ textAlign: "center", padding: "48px 20px", color: "#8E8E8E" }}>
+                    Tidak ada pesanan yang sesuai dengan pencarian atau filter.
+                  </td>
+                </tr>
               ) : (
-                services.map((service) => {
-                  const info = getServiceInfo(service.jenisLayanan);
-                  if (!info) return null;
-                  return (
-                    <div
-                      key={service.id}
-                      className="flex items-center justify-between"
-                    >
-                      <div>
-                        <p className="text-[14px] font-bold text-[#191c1e]">
-                          {info.label}
-                        </p>
-                        <p className="text-[12px] font-medium text-[#191c1e]">
-                          {service.berat || 0}kg + {formatRupiah(info.pricePerKg)}/kg
-                        </p>
+                filteredOrders.map((order) => (
+                  <tr key={order.id}>
+                    {/* Order ID */}
+                    <td className="order-id-cell">{order.id}</td>
+
+                    {/* Customer */}
+                    <td className="customer-name-cell">{order.customer}</td>
+
+                    {/* Service Badge */}
+                    <td>
+                      <span className="service-pill-badge">{order.service}</span>
+                    </td>
+
+                    {/* Amount */}
+                    <td className="order-amount-cell">{order.amount}</td>
+
+                    {/* Status Dropdown */}
+                    <td>
+                      <div className="order-status-select-wrap">
+                        <select
+                          value={order.status}
+                          onChange={(e) => handleStatusChange(order.id, e.target.value)}
+                          className="order-status-select"
+                        >
+                          <option value="Diproses">Diproses</option>
+                          <option value="Selesai">Selesai</option>
+                          <option value="Menunggu">Menunggu</option>
+                          <option value="Batal">Batal</option>
+                        </select>
+                        <ChevronDown className="order-status-select__arrow w-4 h-4" />
                       </div>
-                      <p className="text-[16px] font-bold text-[#191c1e]">
-                        {formatRupiah(getSubtotal(service))}
-                      </p>
-                    </div>
-                  );
-                })
+                    </td>
+
+                    {/* Actions Menu */}
+                    <td>
+                      <div className="order-action-btn-wrap">
+                        <button
+                          type="button"
+                          className="order-action-btn"
+                          onClick={() =>
+                            setActiveActionMenu(activeActionMenu === order.id ? null : order.id)
+                          }
+                          title="Menu Aksi"
+                        >
+                          <MoreHorizontal className="w-5 h-5" />
+                        </button>
+
+                        {activeActionMenu === order.id && (
+                          <div className="order-action-menu">
+                            <button
+                              type="button"
+                              className="order-action-menu__item"
+                              onClick={() => {
+                                alert(`Detail Pesanan: ${order.id}\nPelanggan: ${order.customer}\nLayanan: ${order.service}\nJumlah: ${order.amount}`);
+                                setActiveActionMenu(null);
+                              }}
+                            >
+                              <Eye className="w-4 h-4" />
+                              Detail
+                            </button>
+                            <button
+                              type="button"
+                              className="order-action-menu__item"
+                              onClick={() => {
+                                alert(`Mencetak struk untuk ${order.id}...`);
+                                setActiveActionMenu(null);
+                              }}
+                            >
+                              <Printer className="w-4 h-4" />
+                              Cetak Struk
+                            </button>
+                            <button
+                              type="button"
+                              className="order-action-menu__item order-action-menu__item--danger"
+                              onClick={() => handleDeleteOrder(order.id)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              Hapus
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
               )}
-            </div>
+            </tbody>
+          </table>
+        </div>
 
-            <div className="flex items-center justify-between">
-              <p className="text-[20px] font-bold text-[#191c1e]">Total</p>
-              <p className="text-[24px] font-bold text-[#267dff]">
-                {formatRupiah(total)}
-              </p>
-            </div>
-          </div>
-
-          <div className="mt-6 flex justify-end">
-            <button
-              type="button"
-              onClick={handleSubmit}
-              className="bg-[#267dff] text-white rounded-2xl h-[52px] px-8 font-medium text-sm w-1/2"
-            >
-              Simpan Pesanan
-            </button>
-          </div>
+        {/* Pagination */}
+        <div className="orders-pagination">
+          <button
+            type="button"
+            className="orders-pagination__btn"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            className={`orders-pagination__btn ${currentPage === 1 ? "orders-pagination__btn--active" : ""}`}
+            onClick={() => setCurrentPage(1)}
+          >
+            1
+          </button>
+          <button
+            type="button"
+            className={`orders-pagination__btn ${currentPage === 2 ? "orders-pagination__btn--active" : ""}`}
+            onClick={() => setCurrentPage(2)}
+          >
+            2
+          </button>
+          <button
+            type="button"
+            className={`orders-pagination__btn ${currentPage === 3 ? "orders-pagination__btn--active" : ""}`}
+            onClick={() => setCurrentPage(3)}
+          >
+            3
+          </button>
+          <span className="orders-pagination__dots">...</span>
+          <button
+            type="button"
+            className={`orders-pagination__btn ${currentPage === 10 ? "orders-pagination__btn--active" : ""}`}
+            onClick={() => setCurrentPage(10)}
+          >
+            10
+          </button>
+          <button
+            type="button"
+            className="orders-pagination__btn"
+            disabled={currentPage === 10}
+            onClick={() => setCurrentPage((p) => Math.min(10, p + 1))}
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
+
+      {/* Floating Action Button (+ New Order) routing to /orders/create */}
+      <Link
+        to="/orders/create"
+        className="orders-fab"
+        title="Tambah Pesanan Baru"
+        aria-label="Tambah Pesanan Baru"
+      >
+        <Plus className="w-8 h-8" />
+      </Link>
     </div>
   );
 }
