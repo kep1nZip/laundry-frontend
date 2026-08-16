@@ -12,13 +12,13 @@ function AppRoutes() {
     return (
         <Routes>
             {/* Auth routes */}
-            <Route path="/" element={<Login />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/partners/register" element={<PartnerRegister />} />
 
-            {/* Admin routes */}
+            {/* Admin routes (Dashboard as default localhost root /) */}
             <Route element={<AdminLayout />}>
+                <Route path="/" element={<Dashboard />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/services" element={<Services />} />

@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import loginIllustration from "../../assets/register-illustration.svg";
 
 export default function Login() {
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [form, setForm] = useState({
     email: "",
@@ -16,6 +18,7 @@ export default function Login() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(form);
+    navigate("/");
   };
 
   return (
