@@ -1,0 +1,145 @@
+/* ---------------------------------------------------------------
+ * Shared form + button primitives.
+ * Import once in any page/component that renders form fields or
+ * .btn buttons (Profile, PartnerRegister, Input Pesanan, modals, ...).
+ * Falls back to sane defaults if a design-token var isn't defined,
+ * so it's safe to drop in even if variables.css hasn't been updated.
+ * ------------------------------------------------------------- */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group:last-child {
+  margin-bottom: 0;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-sans, inherit);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--color-text-primary, #111827);
+}
+
+.form-label--required::after {
+  content: " *";
+  color: var(--color-danger, #dc2626);
+}
+
+.form-input,
+.form-textarea,
+.form-select {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: var(--font-sans, inherit);
+  color: var(--color-text-primary, #111827);
+  background: var(--color-input-bg, #f3f4f6);
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm, 8px);
+  box-sizing: border-box;
+  transition: border-color var(--transition-fast, 150ms ease), background var(--transition-fast, 150ms ease);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: var(--color-text-muted, #9ca3af);
+}
+
+.form-textarea {
+  min-height: 92px;
+  resize: vertical;
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='M5 7.5L10 12.5L15 7.5' stroke='%236B7280' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 34px;
+  cursor: pointer;
+}
+
+.form-input:focus,
+.form-textarea:focus,
+.form-select:focus {
+  outline: none;
+  background: var(--color-surface, #fff);
+  border-color: var(--color-primary, #2563eb);
+  box-shadow: 0 0 0 3px var(--color-primary-soft, #dbeafe);
+}
+
+.form-input:disabled,
+.form-textarea:disabled,
+.form-select:disabled {
+  color: var(--color-text-secondary, #4b5563);
+  cursor: not-allowed;
+}
+
+.form-input--error,
+.form-textarea--error,
+.form-select--error {
+  border-color: var(--color-danger, #dc2626);
+  background: var(--color-danger-soft, #fef2f2);
+}
+
+.form-error {
+  margin: 6px 0 0;
+  font-size: 12.5px;
+  color: var(--color-danger, #dc2626);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 46px;
+  padding: 0 20px;
+  font-family: var(--font-sans, inherit);
+  font-size: 14.5px;
+  font-weight: 600;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition-fast, 150ms ease), border-color var(--transition-fast, 150ms ease),
+    color var(--transition-fast, 150ms ease);
+}
+
+.btn--full {
+  width: 100%;
+}
+
+.btn--primary {
+  background: var(--color-primary, #2563eb);
+  color: #fff;
+}
+
+.btn--primary:hover {
+  background: var(--color-primary-hover, #1d4ed8);
+}
+
+.btn--outline {
+  background: var(--color-surface, #fff);
+  border-color: var(--color-border-strong, #d1d5db);
+  color: var(--color-text-primary, #111827);
+}
+
+.btn--outline:hover {
+  background: var(--color-input-bg, #f3f4f6);
+}
+
+.btn--small {
+  height: 38px;
+  padding: 0 14px;
+  font-size: 13.5px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

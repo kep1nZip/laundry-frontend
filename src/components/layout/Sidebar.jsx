@@ -131,19 +131,25 @@ function Sidebar() {
             </svg>
           </button>
 
-          {/* Avatar Profile */}
-          <div className="admin-sidebar__avatar-wrapper">
+          {/* Avatar Profile — click to go to Profile page */}
+          <NavLink
+            to="/profile"
+            className={({ isActive }) =>
+              `admin-sidebar__avatar-wrapper ${isActive ? "admin-sidebar__avatar-wrapper--active" : ""}`
+            }
+            title="Profil Pengguna"
+            aria-label="Ke halaman Profile"
+          >
             <img
               src="https://api.dicebear.com/7.x/bottts/svg?seed=LaundryAdmin"
               alt="User Avatar"
               className="admin-sidebar__avatar"
-              title="Profil Pengguna"
             />
-          </div>
+          </NavLink>
         </div>
       </nav>
     </aside>
   );
 }
-
+ 
 export default Sidebar;

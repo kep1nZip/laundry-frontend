@@ -7,6 +7,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import Dashboard from "../pages/dashboard/Dashboard";
 import Orders from "../pages/orders/Orders";
 import Services from "../pages/services/Services";
+import Profile from "../pages/profile/Profile";
 
 function AppRoutes() {
     return (
@@ -22,6 +23,7 @@ function AppRoutes() {
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/orders" element={<Orders />} />
                 <Route path="/services" element={<Services />} />
+                <Route path="/profile" element={<Profile />} />
             </Route>
         </Routes>
     );
