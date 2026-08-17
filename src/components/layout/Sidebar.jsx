@@ -131,7 +131,14 @@ function Sidebar() {
         {/* Bottom Actions & User Profile */}
         <div className="admin-sidebar__footer">
           {/* Notification Button with Official Figma Bell SVG */}
-          <button className="admin-sidebar__icon-btn" title="Notifikasi" aria-label="Notifikasi">
+          <NavLink
+            to="/notifications"
+            className={({ isActive }) =>
+              `admin-sidebar__icon-btn ${isActive ? "admin-sidebar__icon-btn--active" : ""}`
+            }
+            title="Notifikasi"
+            aria-label="Ke halaman Notifikasi"
+          >
             <svg
               width="40"
               height="40"
@@ -153,7 +160,7 @@ function Sidebar() {
                 strokeWidth="3.5"
               />
             </svg>
-          </button>
+          </NavLink>
 
           {/* Avatar Profile — click to go to Profile page */}
           <NavLink

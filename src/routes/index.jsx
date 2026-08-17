@@ -10,6 +10,7 @@ import CreateOrder from "../pages/orders/CreateOrder";
 import Services from "../pages/services/Services";
 import Chat from "../pages/chat/Chat";
 import Profile from "../pages/profile/Profile";
+import Notifications from "../pages/notifications/Notifications";
 
 function AppRoutes() {
     return (
@@ -29,6 +30,7 @@ function AppRoutes() {
                 <Route path="/chat" element={<Chat />} />
                 <Route path="/messages" element={<Chat />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/notifications" element={<Notifications />} />
             </Route>
         </Routes>
     );
