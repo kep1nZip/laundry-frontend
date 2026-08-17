@@ -1,0 +1,59 @@
+/* ---------------------------------------------------------------
+ * Unified Floating Action Button (FAB) Component Styles
+ * Exact Figma Spec: #267DFF, 24px Radius, Smooth Tactile States
+ * ------------------------------------------------------------- */
+
+.app-floating-add-btn {
+  position: fixed;
+  bottom: 40px;
+  right: 48px;
+  width: 72px;
+  height: 72px;
+  background-color: #267dff;
+  border-radius: 24px;
+  border: none;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 10px 25px rgba(38, 125, 255, 0.38);
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background-color 0.15s ease,
+              box-shadow 0.2s ease;
+  z-index: 99;
+}
+
+.app-floating-add-btn__icon {
+  width: 32px;
+  height: 32px;
+  stroke-width: 2.5px;
+  color: #ffffff;
+}
+
+.app-floating-add-btn:hover {
+  background-color: #1a6fe8;
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 14px 30px rgba(38, 125, 255, 0.48);
+}
+
+.app-floating-add-btn:active {
+  transform: translateY(0) scale(0.95);
+  box-shadow: 0 6px 16px rgba(38, 125, 255, 0.35);
+}
+
+/* Mobile & Tablet view */
+@media (max-width: 1024px) {
+  .app-floating-add-btn {
+    bottom: 24px;
+    right: 24px;
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+  }
+  .app-floating-add-btn__icon {
+    width: 28px;
+    height: 28px;
+  }
+}

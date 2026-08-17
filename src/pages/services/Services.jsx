@@ -444,17 +444,6 @@ function Services() {
         </div>
       </div>
 
-      {/* Floating Action Button (+ Tambah Layanan) */}
-      <button
-        type="button"
-        onClick={handleOpenCreateModal}
-        className="services-fab"
-        title="Tambah Layanan Baru"
-        aria-label="Tambah Layanan Baru"
-      >
-        <Plus className="w-8 h-8" />
-      </button>
-
       {/* Add / Edit Service Modal */}
       {isModalOpen && (
         <div className="modal-overlay" onClick={() => setIsModalOpen(false)}>

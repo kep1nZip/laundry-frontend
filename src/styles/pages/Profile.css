@@ -9,6 +9,7 @@
   max-width: 100%;
   box-sizing: border-box;
   position: relative;
+  animation: pagePopIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .profile__visually-hidden {

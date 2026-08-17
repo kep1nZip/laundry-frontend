@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import {
   Search,
   Calendar,
@@ -374,16 +373,6 @@ function Orders() {
           </button>
         </div>
       </div>
-
-      {/* Floating Action Button (+ New Order) routing to /orders/create */}
-      <Link
-        to="/orders/create"
-        className="orders-fab"
-        title="Tambah Pesanan Baru"
-        aria-label="Tambah Pesanan Baru"
-      >
-        <Plus className="w-8 h-8" />
-      </Link>
     </div>
   );
 }
