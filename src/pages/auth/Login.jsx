@@ -2,10 +2,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
 import loginIllustration from "../../assets/register-illustration.svg";
+import { login } from "../../services/authService";
 
 export default function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -15,10 +18,23 @@ export default function Login() {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(form);
-    navigate("/");
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await login(form);
+      // backend balikin: { message, token }
+      localStorage.setItem("token", res.data.token);
+      navigate("/dashboard");
+    } catch (err) {
+      const msg =
+        err.response?.data?.message || "Login gagal, coba lagi.";
+      setError(msg);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,6 +66,11 @@ export default function Login() {
           <hr className="border-[#e6e8ea] mb-6" />
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {error && (
+              <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {error}
+              </div>
+            )}
             <div>
               <label className="block text-sm text-gray-700 mb-1">
                 Email Address
@@ -98,9 +119,10 @@ export default function Login() {
 
             <button
               type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition"
+              disabled={loading}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg font-medium transition disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Masuk
+              {loading ? "Memproses..." : "Masuk"}
             </button>
           </form>
 
